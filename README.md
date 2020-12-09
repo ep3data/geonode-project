@@ -1,4 +1,4 @@
-# {{ project_name|title }}
+# {{ EP3 Data | Geonode Template Project }}
 
 GeoNode template project. Generates a django project with GeoNode support.
 
