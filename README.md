@@ -37,7 +37,7 @@ To setup your project using a local python virtual environment, follow these ins
 1. Prepare the Environment
 
     ```bash
-    git clone https://github.com/GeoNode/geonode-project.git -b <your_branch>
+    git clone https://github.com/GeoNode/geonode-project.git -b pbgeonode
     source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
     mkvirtualenv --python=/usr/bin/python3 {{ project_name }}
     pip install Django==2.2.12
