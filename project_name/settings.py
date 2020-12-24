@@ -21,6 +21,9 @@
 # Django settings for the GeoNode project.
 import os
 import ast
+from django_auth_ldap import config as ldap_config
+from geonode_ldap.config import GeonodeNestedGroupOfNamesType
+import ldap
 
 try:
     from urllib.parse import urlparse, urlunparse
@@ -142,3 +145,41 @@ if LDAP_ENABLED and 'geonode_ldap' not in INSTALLED_APPS:
 
 # Add your specific LDAP configuration after this comment:
 # https://docs.geonode.org/en/master/advanced/contrib/#configuration
+
+AUTHENTICATION_BACKENDS = (
+        'oauth2_provider.backends.OAuth2Backend',
+        'django.contrib.auth.backends.ModelBackend',
+        'guardian.backends.ObjectPermissionBackend',
+        'allauth.account.auth_backends.AuthenticationBackend',
+        'geonode_ldap.backend.GeonodeLdapBackend',
+)
+
+AUTH_LDAP_SERVER_URI = os.getenv("LDAP_SERVER_URL")
+AUTH_LDAP_BIND_DN = os.getenv("LDAP_BIND_DN")
+AUTH_LDAP_BIND_PASSWORD = os.getenv("LDAP_BIND_PASSWORD")
+AUTH_LDAP_USER_SEARCH = ldap_config.LDAPSearch(
+    os.getenv("LDAP_USER_SEARCH_DN"),
+    ldap.SCOPE_SUBTREE,
+    os.getenv("LDAP_USER_SEARCH_FILTERSTR")
+)
+AUTH_LDAP_GROUP_SEARCH = ldap_config.LDAPSearch(
+    os.getenv("LDAP_GROUP_SEARCH_DN"),
+    ldap.SCOPE_SUBTREE,
+    os.getenv("LDAP_GROUP_SEARCH_FILTERSTR")
+)
+
+GEONODE_LDAP_GROUP_NAME_ATTRIBUTE = os.getenv("LDAP_GROUP_NAME_ATTRIBUTE", default="cn")
+
+## Additional Configuration
+
+# Topic Categories list should not be modified (they are ISO). In case you
+# absolutely need it set to True this variable
+MODIFY_TOPICCATEGORY = ast.literal_eval(os.getenv('MODIFY_TOPICCATEGORY', 'True'))
+
+# If this option is enabled, Topic Categories will become strictly Mandatory on
+# Metadata Wizard
+TOPICCATEGORY_MANDATORY = ast.literal_eval(os.environ.get('TOPICCATEGORY_MANDATORY', 'False'))
+
+MISSING_THUMBNAIL = os.getenv(
+    'MISSING_THUMBNAIL', 'geonode/img/missing_thumb.png'
+)
