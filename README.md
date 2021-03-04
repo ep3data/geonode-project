@@ -1,3 +1,7 @@
+# DEPRECATED
+
+**WARNING**: *This branch has been* **deprecated**. *Please refer to branch* **3.1.x**
+
 # {{ project_name|title }}
 
 GeoNode template project. Generates a django project with GeoNode support.
